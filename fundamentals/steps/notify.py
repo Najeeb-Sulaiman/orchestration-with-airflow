@@ -24,8 +24,8 @@ def notify():
 
         message = (
                 f"CDEBite daily report for {date.today()}\n"
-                f"Order Count: {order_count} | Total Quantity: {total_quantity} |\n"
-                f"Top Customer: {top_customer} | Top Product: {top_product} |\n"
+                f"Order Count: {order_count} | Total Quantity: {total_quantity} |\n" # noqa E501
+                f"Top Customer: {top_customer} | Top Product: {top_product} |\n" # noqa E501
                 f"Top restaurants: ${total_revenue}"
             )
     with open("data/report.txt", "w") as f:
