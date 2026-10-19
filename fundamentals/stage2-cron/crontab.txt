@@ -1,0 +1,4 @@
+5 * * * *   /Users/najeebsulaiman/Documents/CDE/cohort-3/fundamentals/meridian-orchestration/venv/bin/python /Users/najeebsulaiman/Documents/CDE/cohort-3/fundamentals/meridian-orchestration/sales_report/steps/extract.py >> /Users/najeebsulaiman/Documents/CDE/cohort-3/fundamentals/meridian-orchestration/sales_report/stage2_cron/logfile.log 2>&1
+6 * * * *   /python/path /absolute/path/to/script/ >> /absolute/path/to/logfile.log 2>&1
+7 * * * *   /python/path /absolute/path/to/script/ >> /absolute/path/to/logfile.log 2>&1
+8 * * * *   /python/path /absolute/path/to/script/ >> /absolute/path/to/logfile.log 2>&1
