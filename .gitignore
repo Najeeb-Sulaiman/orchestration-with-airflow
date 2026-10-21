@@ -1,3 +1,7 @@
 *.env
 venv/
 __pycache__/
+config/
+logs/
+plugins/
+data/
