@@ -23,23 +23,8 @@ with DAG(
 
     transform_orders = SQLExecuteQueryOperator(
                 task_id="transform_orders",
-                sql=[
-                    "DROP TABLE IF EXISTS sales;",
-                    """
-                    CREATE TABLE sales AS
-                    SELECT DISTINCT
-                    order_id,
-                    CAST(order_date AS TIMESTAMP)          AS order_date,
-                    COALESCE(customer_name, 'Unknown')     AS customer_name,
-                    COALESCE(product, 'Unknown')           AS product,
-                    quantity,
-                    price,
-                    COALESCE(region, 'Unknown'),
-                    (quantity * price)                       AS total_sale
-                FROM raw_sales
-                    """
-                ],
-                conn_id="supabse_conn"        
+                sql="sql/orders.sql",
+                conn_id="supabse_conn"
             )
 
     notify_orders = PythonOperator(
