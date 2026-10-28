@@ -15,7 +15,7 @@ def extract():
 def load():
     df = pd.read_csv(f"{config.DATA_PATH}/raw_sales.csv")
     # engine = create_engine(config.DATABASE_URL) # noqa E501
-    engine = PostgresHook(postgres_conn_id="supabse_conn").get_sqlalchemy_engine
+    engine = PostgresHook(postgres_conn_id="supabse_conn").get_sqlalchemy_engine()
     with engine.connect() as connection:
         print("Connection to database successful!")
         record_no = df.to_sql('raw_sales', connection, if_exists='replace', index=False) # noqa E501
