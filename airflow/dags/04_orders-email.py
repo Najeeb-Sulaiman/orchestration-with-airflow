@@ -1,22 +1,31 @@
 from airflow.sdk import DAG, Variable
-from pendulum import DateTime
+from pendulum import DateTime, duration
 from airflow.providers.standard.operators.python import PythonOperator
 from include.orders_email import extract, load, notify, check_data
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
 from airflow.providers.smtp.operators.smtp import EmailOperator
 from airflow.providers.standard.operators.python import BranchPythonOperator
+from airflow.providers.standard.operators.bash import BashOperator
 
 # environment = Variable.get("environment", default="dev")
 
 with DAG(
     dag_id="orders_email",
     start_date=DateTime(2026, 10, 23),
-    schedule=None
+    schedule=None,
+    catchup=True,
+    tags=["CDE", "Engineering"],
+    description="This is a description",
+    default_args={
+        "retries":2,
+        "retry_delay":duration(seconds=2)
+    }
 ):
 
     extract_orders = PythonOperator(
         task_id="extract_orders",
-        python_callable=extract
+        python_callable=extract,
+        retries=3
     )
 
     check_extract = BranchPythonOperator(
@@ -74,9 +83,15 @@ with DAG(
             </p>
             """,
             conn_id="email_conn"
-    
         )
+
+    cleanup = BashOperator(
+        task_id="cleanup",
+        bash_command="rm /opt/airflow/dags/data/raw_sales.csv",
+        trigger_rule="all_done"
+    )
 
 # extract_orders >> load_orders >> transform_orders >> generate_report >> send_report
 extract_orders >> check_extract >> [load_orders, alert_no_record]
 load_orders >> transform_orders >> generate_report >> send_report
+[alert_no_record, send_report] >> cleanup
